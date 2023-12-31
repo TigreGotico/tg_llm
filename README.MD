@@ -1,8 +1,22 @@
+Library to build intents powered by LLMs
+
+By putting an LLM behind an intent parser anyone can build a natural language interface
+
+Solve problems with natural language, program intents by adding a sequence of steps to a `.steps` file
+
+```text
+Translate '{statement}' to {language} if it's English
+What language is the following text? {text}
+```
+
+## Usage
+
+```
 from os.path import dirname
 
 from tg_llm.intents import LLMIntent
 
-s = LLMIntent("google/flan-t5-large")
+s = LLMIntent("google/flan-t5-large") # choose a LLM
 
 s.load_steps("name", ["extract person names from {text}"])
 print(s.run_steps("name", ["My name is Casimiro"]))
@@ -23,3 +37,4 @@ inputs = [
 
 print(s.run_steps("demo", inputs))
 # ['French', 'German']
+```
