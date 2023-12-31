@@ -11,6 +11,40 @@ What language is the following text? {text}
 
 ## Usage
 
+### Intent Parsing
+
+Tag intents without any training data
+
+```python
+from tg_llm.intents import ZeroShotIntentParser
+
+p = ZeroShotIntentParser(labels=["time", "weather", "math",
+                                 "person_info", "joke", "get_data",
+                                 "unknown"])
+
+data = ["what time is it",
+        "is it going to snow",
+        "who was isaac newton",
+        "what is the speed of light",
+        "10+5",
+        "tell me a joke"]
+
+for utt in data:
+    label, conf = p.classify(utt)
+    print(utt, "-", label, conf)
+    # what time is it - time 0.6037998795509338
+    # is it going to snow - weather 0.4515065848827362
+    # who was isaac newton - person_info 0.3793475925922394
+    # what is the speed of light - unknown 0.6040631532669067
+    # 10+5 - math 0.3564682900905609
+    # tell me a joke - joke 0.6909916996955872
+
+```
+
+### LLM Intents
+
+Handle intents with LLMs
+
 ```
 from os.path import dirname
 
