@@ -11,25 +11,6 @@ What language is the following text? {text}
 
 ## Usage
 
-### LLM Skill
-
-TODO - NOT YET IMPLEMENTED
-```python
-class MySkill(LLMSkill):
-
-   @llm_intent("thing.intent", "thing.steps")
-   def handle_intent(self, message):
-       # thing.intent is a regular OVOS intent
-       # thing.steps file is executed with data returned by this handler  
-       prompt = "this will be sent to the LLM .steps file"
-       data = {}
-       return prompt, data     
-```
-
-TODO - implement example
-
-![image](https://github.com/TigreGotico/tg_llm/assets/33701864/d017c07b-7716-4c0f-980b-a5a3105d898a)
-
 ### LLM Intents
 
 Handle intents with LLMs
@@ -61,6 +42,25 @@ inputs = [
 print(s.run_steps("demo", inputs))
 # ['French', 'German']
 ```
+
+### LLM Skill
+
+TODO - NOT YET IMPLEMENTED
+```python
+class MySkill(LLMSkill):
+
+   @llm_intent("thing.intent", "thing.steps")
+   def handle_intent(self, message):
+       # thing.intent is a regular OVOS intent
+       # thing.steps file is executed with data returned by this handler  
+       prompt = "this will be sent to the LLM .steps file"
+       data = {}
+       return prompt, data     
+```
+
+TODO - implement example
+
+![image](https://github.com/TigreGotico/tg_llm/assets/33701864/d017c07b-7716-4c0f-980b-a5a3105d898a)
 
 ### Intent Parsing
 
