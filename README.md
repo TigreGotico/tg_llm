@@ -8,9 +8,6 @@ Solve problems with natural language, program intents by adding a sequence of st
 Translate '{statement}' to {language} if it's English
 What language is the following text? {text}
 ```
-TODO - implement example
-
-![image](https://github.com/TigreGotico/tg_llm/assets/33701864/d017c07b-7716-4c0f-980b-a5a3105d898a)
 
 ## Usage
 
@@ -29,11 +26,15 @@ class MySkill(LLMSkill):
        return text, data     
 ```
 
+TODO - implement example
+
+![image](https://github.com/TigreGotico/tg_llm/assets/33701864/d017c07b-7716-4c0f-980b-a5a3105d898a)
+
 ### LLM Intents
 
 Handle intents with LLMs
 
-```
+```python
 from os.path import dirname
 
 from tg_llm.intents import LLMIntent
