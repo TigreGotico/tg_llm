@@ -14,6 +14,21 @@ TODO - implement example
 
 ## Usage
 
+### LLM Skill
+
+TODO - NOT YET IMPLEMENTED
+```python
+class MySkill(LLMSkill):
+
+   @llm_intent("thing.intent", "thing.steps")
+   def handle_intent(self, message):
+       # thing.intent is a regular OVOS intent
+       # thing.steps file is executed with data returned by this handler  
+       text = "this will be sent to the LLM .steps file"
+       data = {}
+       return text, data     
+```
+
 ### LLM Intents
 
 Handle intents with LLMs
