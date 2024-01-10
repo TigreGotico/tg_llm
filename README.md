@@ -21,9 +21,9 @@ class MySkill(LLMSkill):
    def handle_intent(self, message):
        # thing.intent is a regular OVOS intent
        # thing.steps file is executed with data returned by this handler  
-       text = "this will be sent to the LLM .steps file"
+       prompt = "this will be sent to the LLM .steps file"
        data = {}
-       return text, data     
+       return prompt, data     
 ```
 
 TODO - implement example
