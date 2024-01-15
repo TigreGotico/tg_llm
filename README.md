@@ -18,16 +18,18 @@ Handle intents with LLMs
 ```python
 from os.path import dirname
 
-from tg_llm.intents import LLMIntent
+from tg_llm.intents import LLMIntent, Sequences
 
-s = LLMIntent("google/flan-t5-large") # choose a LLM
+llm = Sequences("google/flan-t5-large")
 
-s.load_steps("name", ["extract person names from {text}"])
-print(s.run_steps("name", ["My name is Casimiro"]))
+s = LLMIntent() 
+s.load_model(llm) # choose a LLM
+s.load_steps(["extract person names from {text}"])
+print(s.run_steps(["My name is Casimiro"]))
 # ['Casimiro']
 
 
-s.load_steps_from_file("demo", f"{dirname(__file__)}/demo.steps")
+s.load_steps_from_file(f"{dirname(__file__)}/demo.steps")
 
 # demo.steps is a text file of natural language commands
 # each line is a LLM prompt executed sequentially, the result is sent to the next prompt as {text}
@@ -39,28 +41,9 @@ inputs = [
     {"statement": "Hallo, wie geht's dir", "language": "French"}
 ]
 
-print(s.run_steps("demo", inputs))
+print(s.run_steps(inputs))
 # ['French', 'German']
 ```
-
-### LLM Skill
-
-TODO - NOT YET IMPLEMENTED
-```python
-class MySkill(LLMSkill):
-
-   @llm_intent("thing.intent", "thing.steps")
-   def handle_intent(self, message):
-       # thing.intent is a regular OVOS intent
-       # thing.steps file is executed with data returned by this handler  
-       prompt = "this will be sent to the LLM .steps file"
-       data = {}
-       return prompt, data     
-```
-
-TODO - implement example
-
-![image](https://github.com/TigreGotico/tg_llm/assets/33701864/d017c07b-7716-4c0f-980b-a5a3105d898a)
 
 ### Intent Parsing
 
@@ -104,4 +87,47 @@ p = ZeroShotIntentParser(fallback=qa)
 ans = p.execute("in what language is this text")
 print(ans)
 # English
+```
+
+
+extract keywords
+
+```python
+
+p = ZeroShotIntentParser()
+
+
+def get_wiki(query: str):
+    import requests
+    url = f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={query}&format=json"
+    res = requests.get(url).json()["query"]["search"]
+    for r in res:
+        pid = str(r["pageid"])
+        results_url = f"https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|pageimages&exintro&explaintext&redirects=1&pageids=" + pid
+        r = requests.get(results_url).json()
+        return r['query']['pages'][pid]['extract'].split("\n")[0]
+    ans = f"I don't know anything about {query}"
+    return ans
+
+
+
+# use LLMs to pre-process the input
+kwrod = LLMIntent()
+kwrod.load_steps(["Extract the subject for a wikipedia search from the question: '{text}'"])
+# accepts LLMIntent, callable, or tuple (LLMIntent, callable)
+keywords = {
+    "wiki_summary": (kwrod, get_wiki)  # (LLMIntent, handler) -> LLM provides input for handler
+}
+
+wiki = LLMIntent()
+wiki.load_steps(["Answer the question '{text}' given this text from wikipedia: {wiki_summary}"])
+p.register_intent("knowledge", wiki, keywords)
+
+ans = p.execute("when was Isaac newton born")
+print(ans)  # 25 December 1642
+ans = p.execute("what did newton invent")
+print(ans)  # law of universal gravitation
+ans = p.execute("what was newton's profession")
+print(ans)  # physicist
+
 ```
